@@ -1,7 +1,8 @@
 # RCAL Station (native app)
 
 Expo / React Native app for the SolarEPC Station CRM. Phase 0: sign-in, session, biometric lock, role tabs, More screen.
-Phase 1: dashboard (3 numbers + 13 follow-ups), customer list (search, 4 segments, paging, pull to refresh), customer screen (Overview, Progress, Loan; installers see Progress only). Read-only. Tasks tab and the + button are still placeholders.
+Phase 1: dashboard (3 numbers + 13 follow-ups), customer list (search, 4 segments, paging, pull to refresh), customer screen (Overview, Progress, Loan; installers see Progress only). Tasks tab and the + button are still placeholders.
+Phase 2: customer actions. Move to next step, Move back, Cancel (type CANCEL), Reactivate, Request/Approve/Send back completion, Notes and timeline. Buttons show per role; the server is the final judge.
 
 ## Run it in VS Code
 
@@ -38,3 +39,12 @@ This gives an installable APK link to share privately.
 ## What to test on the phone
 
 Sign in, wrong password message, tabs for each role, fingerprint toggle in More, lock after 2 minutes in background, airplane mode then reopen (offline screen), Sign out.
+
+## When the backend rules change
+
+`src/lib/rules.ts` copies the status rules from the backend. After you change `statusEngine.js` or `workflow.js`:
+
+    node scripts/make-backend-rules.js "C:\path\to\backend\src"
+    npm test
+
+If a test fails, make the same change in `src/lib/rules.ts`.

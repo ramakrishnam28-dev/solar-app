@@ -32,6 +32,14 @@ export interface Customer {
   second_disbursal_amount?: number | string | null;
   reverification_required?: boolean | null;
   field_visit_done?: boolean | null;
+  completion_requested_at?: string | null;
+  completion_requested_by_name?: string | null;
+  completion_request_note?: string | null;
+  completion_rejected_note?: string | null;
+  cancel_reason?: string | null;
+  cancelled_at?: string | null;
+  cancelled_by_name?: string | null;
+  cancelled_from_status?: string | null;
   [k: string]: unknown;
 }
 

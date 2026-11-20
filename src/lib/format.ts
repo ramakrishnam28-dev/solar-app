@@ -35,3 +35,13 @@ export function kw(v: unknown): string {
   const n = Number(v);
   return Number.isFinite(n) && n > 0 ? `${n} kW` : '';
 }
+
+/** "20 Nov 2026, 3:21 pm" in the phone's own time zone. */
+export function dateTime(v: unknown): string {
+  if (!v) return '–';
+  const d = new Date(String(v));
+  if (Number.isNaN(d.getTime())) return '–';
+  const h = d.getHours();
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}, ${h % 12 || 12}:${mm} ${h < 12 ? 'am' : 'pm'}`;
+}

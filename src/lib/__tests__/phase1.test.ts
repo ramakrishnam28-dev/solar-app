@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { inr, dateShort, initials, place, kw } from '../format';
+import { inr, dateShort, dateTime, initials, place, kw } from '../format';
 import { statusLabel, statusTone, stageIndex, STAGES } from '../status';
 import { unwrapList, unwrapPagination, listPath, fetchCustomersPage } from '../customers';
 import { computeKpis, computeOps } from '../dashboard';
@@ -85,4 +85,10 @@ test('dashboard KPIs and ops', () => {
   assert.equal(ops.R7, 1);
   assert.equal(ops.R13, 5);  // 7 customers, 2 with field visit done
   assert.equal(computeOps(list).length, 13);
+});
+
+test('dateTime has day, month, year and a 12-hour clock', () => {
+  assert.match(dateTime('2026-11-20T09:51:00Z'), /^\d{1,2} [A-Z][a-z]{2} 2026, (1[0-2]|[1-9]):[0-5]\d (am|pm)$/);
+  assert.equal(dateTime(null), '–');
+  assert.equal(dateTime('junk'), '–');
 });

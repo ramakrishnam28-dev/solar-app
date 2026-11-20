@@ -12,6 +12,7 @@ import { fetchCustomersPage, fetchSegmentCounts, type Customer, type SegmentCoun
 import { initials, kw, place } from '@/lib/format';
 import { SEGMENTS, statusLabel, statusTone, type Segment } from '@/lib/status';
 import { api } from '@/state/api';
+import { useDataVersion } from '@/state/dataVersion';
 
 export default function Customers() {
   const [segment, setSegment] = useState<Segment>('active');
@@ -50,7 +51,15 @@ export default function Customers() {
   }, [search, segment]);
 
   useEffect(() => { load('reset'); }, [load]);
-  useEffect(() => { fetchSegmentCounts(api).then(setCounts).catch(() => {}); }, []);
+  const version = useDataVersion();
+  const firstVersion = useRef(true);
+  // a customer was changed elsewhere in the app: reload the list and the chip counts
+  useEffect(() => {
+    if (firstVersion.current) { firstVersion.current = false; }
+    else load('refresh');
+    fetchSegmentCounts(api).then(setCounts).catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version]);
 
   const loadMore = async () => {
     if (more || loading || page >= totalPages) return;

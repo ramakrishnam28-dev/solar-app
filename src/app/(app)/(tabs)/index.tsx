@@ -10,6 +10,7 @@ import { count } from '@/lib/format';
 import { ROLE_LABELS } from '@/lib/permissions';
 import { api } from '@/state/api';
 import { useSession } from '@/state/session';
+import { useDataVersion } from '@/state/dataVersion';
 import { useLoad } from '@/state/useLoad';
 
 function greeting() {
@@ -21,7 +22,8 @@ export default function Home() {
   const { user, can } = useSession();
   const first = (user?.name ?? '').split(' ')[0];
   const allowed = can('dashboard');
-  const { data, error, loading, refreshing, refresh, reload } = useLoad(() => fetchAllForDashboard(api), []);
+  const version = useDataVersion();
+  const { data, error, loading, refreshing, refresh, reload } = useLoad(() => fetchAllForDashboard(api), [version]);
 
   const kpis = data ? computeKpis(data.list, data.total) : [];
   const ops = data ? computeOps(data.list) : [];
