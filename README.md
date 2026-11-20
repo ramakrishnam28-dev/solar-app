@@ -1,56 +1,39 @@
-# Welcome to your Expo app 👋
+# RCAL Station (native app)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Expo / React Native app for the SolarEPC Station CRM. Phase 0: sign-in, session, biometric lock, role-based tabs, More screen. Customers, Tasks and the dashboard arrive in Phase 1 onward.
 
-## Get started
+## Run it in VS Code
 
-1. Install dependencies
+1. Install Node 20 or newer (https://nodejs.org) and VS Code.
+2. Open this folder in VS Code, then open the terminal (Ctrl+`).
+3. `npm install`
+4. `npx expo install --fix` (aligns package versions with your Expo SDK)
+5. `npx expo start`
+6. On your Android phone install **Expo Go** from Play Store, same Wi-Fi as the laptop, scan the QR code in the terminal.
+   If the QR does not connect: `npx expo start --tunnel`.
 
-   ```bash
-   npm install
-   ```
+## Checks
 
-2. Start the app
+- `npm run typecheck`
+- `npm test` (API client and permissions tests)
 
-   ```bash
-   npx expo start
-   ```
+## Server address
 
-In the output, you'll find options to open the app in a
+Default is the Cloudflare Worker in `app.json` (`extra.apiUrl`). To override, create `.env`:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+    EXPO_PUBLIC_API_URL=https://your-api.example.com
 
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Restart `npx expo start` after changing it.
 
-## Get a fresh project
+## Android APK for your staff (later)
 
-When you're ready, run:
+    npm i -g eas-cli
+    eas login
+    eas build:configure
+    eas build --platform android --profile preview
 
-```bash
-npm run reset-project
-```
+This gives an installable APK link to share privately.
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+## What to test on the phone
 
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Sign in, wrong password message, tabs for each role, fingerprint toggle in More, lock after 2 minutes in background, airplane mode then reopen (offline screen), Sign out.

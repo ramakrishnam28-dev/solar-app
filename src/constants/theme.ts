@@ -1,65 +1,31 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://unistyl.es/), etc.
- */
-
-import '@/global.css';
-
-import { Platform } from 'react-native';
-
-export const Colors = {
-  light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
-  },
-  dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
+/** Design tokens. Same palette as the web app redesign. */
+export const colors = {
+  brand: '#166534',
+  brandHover: '#14532d',
+  brandTint: '#ecfdf3',
+  sun: '#f5a524',
+  bg: '#f6f7f6',
+  surface: '#ffffff',
+  border: '#e4e7e5',
+  ink: '#1c1f1d',
+  ink2: '#4b524e',
+  ink3: '#6b726e',
+  white: '#ffffff',
+  // status tones: one meaning per colour. Grey is for "cancelled" only.
+  tone: {
+    done: { fg: '#166534', bg: '#ecfdf3' },
+    progress: { fg: '#1d4ed8', bg: '#eff6ff' },
+    waiting: { fg: '#92400e', bg: '#fffbeb' },
+    problem: { fg: '#b91c1c', bg: '#fef2f2' },
+    inactive: { fg: '#4b524e', bg: '#f1f3f2' },
   },
 } as const;
 
-export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
+export type Tone = keyof typeof colors.tone;
 
-export const Fonts = Platform.select({
-  ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
-  },
-  default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
-  },
-  web: {
-    sans: 'var(--font-display)',
-    serif: 'var(--font-serif)',
-    rounded: 'var(--font-rounded)',
-    mono: 'var(--font-mono)',
-  },
-});
+export const space = { 1: 4, 2: 8, 3: 12, 4: 16, 5: 24, 6: 32 } as const;
+export const radius = { sm: 8, md: 12, lg: 16, pill: 999 } as const;
+export const font = { caption: 12, small: 13, body: 15, lead: 17, title: 22, large: 28 } as const;
 
-export const Spacing = {
-  half: 2,
-  one: 4,
-  two: 8,
-  three: 16,
-  four: 24,
-  five: 32,
-  six: 64,
-} as const;
-
-export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
-export const MaxContentWidth = 800;
+/** Every tappable control is at least this tall and wide (dp). */
+export const MIN_TAP = 44;

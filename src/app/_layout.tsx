@@ -1,18 +1,49 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+import React from 'react';
+import { SplashScreen, Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+import { SessionProvider, useSession } from '@/state/session';
 
 SplashScreen.preventAutoHideAsync();
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+function SplashController() {
+  const { status } = useSession();
+  if (status !== 'loading') SplashScreen.hide();
+  return null;
+}
+
+/** Each screen group is only reachable in its own session state. */
+function Navigator() {
+  const { status } = useSession();
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
+    <>
+      <StatusBar style="dark" />
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#f6f7f6' } }}>
+        <Stack.Protected guard={status === 'signedOut'}>
+          <Stack.Screen name="sign-in" />
+        </Stack.Protected>
+        <Stack.Protected guard={status === 'locked'}>
+          <Stack.Screen name="locked" />
+        </Stack.Protected>
+        <Stack.Protected guard={status === 'offline'}>
+          <Stack.Screen name="offline" />
+        </Stack.Protected>
+        <Stack.Protected guard={status === 'signedIn'}>
+          <Stack.Screen name="(app)" />
+        </Stack.Protected>
+      </Stack>
+    </>
+  );
+}
+
+export default function Root() {
+  return (
+    <SafeAreaProvider>
+      <SessionProvider>
+        <SplashController />
+        <Navigator />
+      </SessionProvider>
+    </SafeAreaProvider>
   );
 }
