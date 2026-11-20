@@ -19,6 +19,9 @@ export interface Customer {
   amount_disbursed?: number | string | null;
   disbursed_amount?: number | string | null;
   loan_bank?: string | null;
+  loan_bank_name?: string | null;
+  loan_application_no?: string | null;
+  sanctioned_amount?: number | string | null;
   loan_amount?: number | string | null;
   payment_method?: string | null;
   referral_s1_paid?: boolean | null;

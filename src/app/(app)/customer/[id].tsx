@@ -124,15 +124,20 @@ function Overview({ c }: { c: Customer }) {
 }
 
 function Loan({ c }: { c: Customer }) {
-  const has = c.loan_bank || c.loan_amount;
+  const bank = c.loan_bank || c.loan_bank_name || null;
+  const amount = Number(c.loan_amount) > 0 ? c.loan_amount : null;
+  const sanctioned = Number(c.sanctioned_amount) > 0 ? c.sanctioned_amount : null;
+  const disbursed = Number(c.amount_disbursed || c.disbursed_amount) > 0 ? (c.amount_disbursed || c.disbursed_amount) : null;
+  const has = !!(bank || amount || sanctioned || disbursed || c.loan_application_no);
   return (
     <>
       <SectionLabel>Loan</SectionLabel>
       {has ? (
         <Lines rows={[
-          ['Bank', c.loan_bank], ['Loan amount', c.loan_amount ? inr(c.loan_amount) : null],
-          ['Disbursed', (c.amount_disbursed || c.disbursed_amount) ? inr(c.amount_disbursed || c.disbursed_amount) : null],
-          ['2nd disbursal', c.second_disbursal_amount ? inr(c.second_disbursal_amount) : null],
+          ['Bank', bank], ['Application no.', c.loan_application_no as string | null],
+          ['Loan amount', amount ? inr(amount) : null], ['Sanctioned', sanctioned ? inr(sanctioned) : null],
+          ['Disbursed', disbursed ? inr(disbursed) : null],
+          ['2nd disbursal', Number(c.second_disbursal_amount) > 0 ? inr(c.second_disbursal_amount) : null],
         ]} />
       ) : (
         <Card><Text style={{ color: colors.ink2, fontSize: font.body }}>No loan details on this customer yet.</Text></Card>
