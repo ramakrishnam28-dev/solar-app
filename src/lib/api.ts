@@ -48,15 +48,16 @@ export function createApiClient(opts: ApiClientOptions) {
   let refreshing: Promise<boolean> | null = null;
 
   async function rawFetch(method: string, path: string, body: unknown, token: string | null): Promise<Response> {
-    const headers: Record<string, string> = { 'Content-Type': 'application/json', Accept: 'application/json' };
+    const isForm = typeof FormData !== 'undefined' && body instanceof FormData;
+    const headers: Record<string, string> = isForm ? { Accept: 'application/json' } : { 'Content-Type': 'application/json', Accept: 'application/json' };
     if (token) headers.Authorization = `Bearer ${token}`;
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    const timer = setTimeout(() => controller.abort(), isForm ? Math.max(timeoutMs, 90_000) : timeoutMs);
     try {
       return await doFetch(`${baseUrl}/api/v1${path}`, {
         method,
         headers,
-        body: body === undefined || body === null ? undefined : JSON.stringify(body),
+        body: body === undefined || body === null ? undefined : isForm ? (body as FormData) : JSON.stringify(body),
         signal: controller.signal,
       });
     } catch (e) {
@@ -152,6 +153,8 @@ export function createApiClient(opts: ApiClientOptions) {
     getPage: <T>(path: string) => request<T>('GET', path),
     post: <T>(path: string, body?: unknown) => request<T>('POST', path, body ?? {}).then((r) => r.data),
     patch: <T>(path: string, body?: unknown) => request<T>('PATCH', path, body ?? {}).then((r) => r.data),
+    /** multipart/form-data upload (files). Never retried automatically. */
+    upload: <T>(path: string, form: FormData) => request<T>('POST', path, form).then((r) => r.data),
     del: <T>(path: string) => request<T>('DELETE', path).then((r) => r.data),
     /** Public calls (login). Never sends a token and never tries to refresh. */
     postPublic: <T>(path: string, body: unknown) => request<T>('POST', path, body, { auth: false }).then((r) => r.data),

@@ -57,7 +57,7 @@ export function canAccess(
 }
 
 /** Pages that already exist natively in the app. Everything else opens on the web. */
-export const NATIVE_PAGES: PageKey[] = ['dashboard', 'profile'];
+export const NATIVE_PAGES: PageKey[] = ['dashboard', 'profile', 'customers', 'newCustomer', 'documents', 'installations', 'myLeads', 'loans', 'netMeter', 'subsidyTracker', 'disbursements'];
 
 export const PAGE_LABELS: Record<PageKey, string> = {
   dashboard: 'Dashboard', newCustomer: 'New customer', customers: 'Customers', loans: 'Loans',

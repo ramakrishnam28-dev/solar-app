@@ -3,6 +3,7 @@ import { SplashScreen, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { UnderDevelopmentProvider } from '@/components/under-development';
 import { SessionProvider, useSession } from '@/state/session';
 
 SplashScreen.preventAutoHideAsync();
@@ -42,7 +43,9 @@ export default function Root() {
     <SafeAreaProvider>
       <SessionProvider>
         <SplashController />
-        <Navigator />
+        <UnderDevelopmentProvider>
+          <Navigator />
+        </UnderDevelopmentProvider>
       </SessionProvider>
     </SafeAreaProvider>
   );

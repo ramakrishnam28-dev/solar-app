@@ -7,7 +7,10 @@ import { TAB_BAR_SPACE } from '@/components/tab-bar';
 import { colors, font, space } from '@/constants/theme';
 import { API_URL, LOCK_AFTER_MS, WEB_URL } from '@/lib/config';
 import { confirm } from '@/lib/confirm';
-import { PAGE_KEYS, PAGE_LABELS, ROLE_LABELS } from '@/lib/permissions';
+import { can as allowed } from '@/lib/actions';
+import { NATIVE_PAGES, PAGE_KEYS, PAGE_LABELS, ROLE_LABELS } from '@/lib/permissions';
+import { TRACKERS } from '@/lib/work';
+import { router } from 'expo-router';
 import { useSession } from '@/state/session';
 
 export default function More() {
@@ -16,7 +19,11 @@ export default function More() {
   const [conn, setConn] = useState<{ ok: boolean; text: string } | null>(null);
   const [checking, setChecking] = useState(false);
 
-  const webPages = PAGE_KEYS.filter((p) => can(p) && p !== 'dashboard' && p !== 'profile');
+  const webPages = PAGE_KEYS.filter((p) => can(p) && !NATIVE_PAGES.includes(p));
+  const trackers = [
+    ...(can('loans') && allowed.loans(user?.role) ? [{ label: 'Loan tracker', icon: 'cash-outline' as const, go: () => router.push('/loans') }] : []),
+    ...TRACKERS.filter((t) => can(t.page)).map((t) => ({ label: t.title, icon: (t.key === 'netmeter' ? 'flash-outline' : t.key === 'subsidy' ? 'ribbon-outline' : 'swap-horizontal-outline') as 'flash-outline', go: () => router.push({ pathname: '/tracker/[key]', params: { key: t.key } }) })),
+  ];
 
   async function toggleBio(on: boolean) {
     setBioMsg('');
@@ -66,6 +73,20 @@ export default function More() {
         />
         {bioMsg ? <View style={{ marginTop: space[2] }}><Banner tone="waiting">{bioMsg}</Banner></View> : null}
       </Card>
+
+      {trackers.length ? (
+        <>
+          <SectionLabel>Trackers</SectionLabel>
+          <Card style={{ paddingVertical: space[2] }}>
+            {trackers.map((t, i) => (
+              <View key={t.label}>
+                {i > 0 ? <Divider /> : null}
+                <Row icon={t.icon} label={t.label} onPress={t.go} />
+              </View>
+            ))}
+          </Card>
+        </>
+      ) : null}
 
       {webPages.length ? (
         <>

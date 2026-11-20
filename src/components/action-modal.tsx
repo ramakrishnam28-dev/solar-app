@@ -35,7 +35,8 @@ export function ActionModal({ title, intro, confirmLabel, destructive, textLabel
     try {
       await onConfirm(text);
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : 'Something went wrong. Try again.');
+      // a "quiet" error is a field problem the caller already shows next to the field
+      if (!(e as { quiet?: boolean })?.quiet) setError(e instanceof ApiError ? e.message : 'Something went wrong. Try again.');
       lock.current = false; setBusy(false);
     }
   };

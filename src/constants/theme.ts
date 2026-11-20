@@ -11,6 +11,16 @@ export const colors = {
   ink2: '#4b524e',
   ink3: '#6b726e',
   white: '#ffffff',
+  // design pass (Android wireframes)
+  hero: '#12301f',
+  heroSoft: '#1d4a30',
+  mint: '#cfe8d6',
+  mintInk: '#14532d',
+  peach: '#fde7d3',
+  peachInk: '#9a3412',
+  tileGreen: '#e3f1e6',
+  tileGrey: '#eef1ee',
+  bar: ['#cfe8d6', '#a8d5b5', '#7bbf8f', '#4aa468', '#f2c46d'],
   // status tones: one meaning per colour. Grey is for "cancelled" only.
   tone: {
     done: { fg: '#166534', bg: '#ecfdf3' },

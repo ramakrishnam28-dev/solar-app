@@ -17,8 +17,14 @@
       },
       "predictiveBackGestureEnabled": false,
       "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "CAMERA",
         "USE_BIOMETRIC",
         "USE_FINGERPRINT"
+      ],
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "ios": {
@@ -45,7 +51,22 @@
         {
           "faceIDPermission": "Use Face ID to unlock RCAL Station."
         }
-      ]
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Pick photos of customer documents and site work.",
+          "cameraPermission": "Take photos of customer documents and installation work.",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Tag site photos and check in at the installation site."
+        }
+      ],
+      "expo-document-picker"
     ],
     "experiments": {
       "typedRoutes": false,

@@ -1,4 +1,5 @@
 import type { Customer } from './customers';
+import { bucketOf, PIPELINE_BUCKETS } from './status';
 
 const POST_INSTALL = ['installation_complete', 'net_meter_applied', 'net_meter_approved', 'net_meter_installed', 'subsidy_awaited', 'subsidy_credited', 'project_complete'];
 const LOAN_STAGES = ['loan_ready', 'loan_applied', 'loan_reapplication', 'loan_rejected', 'loan_sanctioned', 'amount_disbursed', 'disbursed_full', 'disbursed_partial', ...POST_INSTALL];
@@ -44,4 +45,48 @@ export function computeOps(customers: Customer[]): Op[] {
     { id: 'R12', label: 'Reverification required', count: n((c) => !!c.reverification_required) },
     { id: 'R13', label: 'Field visit pending', count: n((c) => !c.field_visit_done) },
   ];
+}
+
+// ── Home (Android wireframe A1) ─────────────────────────────────────
+
+export interface HomeStats {
+  active: number;
+  pipelineKw: number;
+  buckets: number[]; // customers per PIPELINE_BUCKETS
+  installed: number;
+  awaitingApproval: number;
+  fieldVisits: number;
+}
+
+/** Numbers for the Home screen. "Active" = in the pipeline (not completed, not cancelled). */
+export function computeHome(customers: Customer[]): HomeStats {
+  const buckets = PIPELINE_BUCKETS.map(() => 0);
+  let active = 0;
+  let pipelineKw = 0;
+  for (const c of customers) {
+    const b = bucketOf(c.status);
+    if (b < 0) continue;
+    buckets[b] += 1;
+    active += 1;
+    const k = Number(c.system_kw);
+    if (Number.isFinite(k)) pipelineKw += k;
+  }
+  const live = (c: Customer) => bucketOf(c.status) >= 0;
+  return {
+    active,
+    pipelineKw: Math.round(pipelineKw * 10) / 10,
+    buckets,
+    installed: customers.filter((c) => c.status === 'installation_complete').length,
+    awaitingApproval: customers.filter((c) => c.status === 'loan_applied' || c.status === 'loan_reapplication').length,
+    fieldVisits: customers.filter((c) => live(c) && !c.field_visit_done).length,
+  };
+}
+
+/** Count of loans past the bank's SLA from GET /loans?overdue=true&limit=1. null when unknown. */
+export function overdueLoanCount(body: { data?: unknown; pagination?: { total?: number } } | null | undefined): number | null {
+  const d = body?.data as { total?: number; loans?: unknown[]; pagination?: { total?: number } } | undefined;
+  const t = d?.total ?? d?.pagination?.total ?? body?.pagination?.total;
+  if (typeof t === 'number') return t;
+  if (Array.isArray(d?.loans)) return d.loans.length;
+  return null;
 }

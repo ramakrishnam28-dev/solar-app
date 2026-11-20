@@ -77,12 +77,16 @@ Native app (Expo / React Native) for the SolarEPC Station CRM. Read this file fi
 
 | Part | Status |
 |---|---|
-| Sign in, session, biometric lock, offline screen | Built (login hero and "Forgot password" not yet, show **Under development**) |
-| Home | Built, **does not match the design yet** (needs hero card, quick actions, action queue) |
-| Customers list | Built, **does not match the design yet** (needs progress bar, step count, Next line) |
-| Customer screen | Built (Overview, Progress, Loan, Notes), **does not match the design yet** (needs 5-tab layout, header buttons, stepper, sticky button) |
+| Sign in, session, biometric lock, offline screen | Built. Login hero + "Forgot password" (tells you to ask an admin, no reset endpoint) |
+| Home | Built to the Android design (hero, pipeline labels, quick actions, tiles, Needs attention). iOS greeting/pill bar with `EXPO_PUBLIC_DESIGN=ios` |
+| Customers list | Built to the design. Sorted "newest first" (server cannot sort by next action) |
+| Customer screen | Built: 5 tabs, step dots, Call/WhatsApp/Map, ⋮ menu, sticky bottom bar |
 | Actions: next step, Move back, Cancel, Reactivate, completion, notes | Built, working |
-| Cash, Docs, Logs | **Under development** |
-| New customer, "+" sheet | **Under development** |
-| Tasks | **Under development** |
-| More: Loans, trackers | **Under development** |
+| New customer (3 steps, duplicate phone check), Edit customer | Built |
+| Field visit "Mark done" | Built. **Needs backend patch 2** (validator stripped the fields; also broken on the web) |
+| Docs: 8 KYC documents (camera / gallery / PDF), view, replace | Built. Manager needs backend patch 2 |
+| Site photos (8 labels + net meter), GPS check-in | Built (photos themselves carry no GPS; the check-in does) |
+| Cash flow: quotation split, tiles, money steps, Record payment (cash / hybrid) | Built. Loan disbursal recording and "Share statement" stay **Under development** |
+| Tasks: installer jobs, team queue grouped by next action | Built |
+| More: Loan tracker (SLA sort, bank/status chips, Call bank, Escalate), Net meter, Subsidy, Disbursements trackers | Built |
+| Assign agent, Notifications, Reports, "+" action sheet | **Under development** |

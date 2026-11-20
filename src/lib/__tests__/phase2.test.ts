@@ -95,3 +95,37 @@ test('timeline helpers read notes and reasons, even when metadata is a string', 
   assert.equal(A.timelineDetail(t({ type: 'note' })), '');
   assert.equal(A.timelineDetail(t('not json')), '');
 });
+
+import { bucketOf, nextAction, primaryLabel, stepNumber } from '../status';
+import { computeHome, overdueLoanCount } from '../dashboard';
+
+test('design helpers: step number, buckets, next action', () => {
+  assert.equal(stepNumber('loan_applied'), 3);
+  assert.equal(stepNumber('project_complete'), 8);
+  assert.equal(stepNumber('cancelled'), 0);
+  assert.equal(bucketOf('cancelled'), -1);
+  assert.equal(bucketOf('project_complete'), -1);
+  assert.equal(bucketOf('loan_applied'), 2);
+  assert.equal(bucketOf('net_meter_applied'), 4);
+  assert.deepEqual(nextAction({ status: 'lead_captured', field_visit_done: false }), { text: 'Field visit pending', warm: true });
+  assert.equal(nextAction({ status: 'installation_complete' }).warm, false);
+  assert.equal(primaryLabel('loan_applied'), 'Update loan decision');
+  assert.equal(primaryLabel('onboarded'), 'Move to next step');
+});
+
+test('computeHome counts only live projects', () => {
+  const h = computeHome([
+    { id: '1', name: 'a', status: 'loan_applied', system_kw: '5', field_visit_done: true },
+    { id: '2', name: 'b', status: 'lead_captured', system_kw: 3, field_visit_done: false },
+    { id: '3', name: 'c', status: 'cancelled', system_kw: 9 },
+    { id: '4', name: 'd', status: 'project_complete', system_kw: 9 },
+    { id: '5', name: 'e', status: 'installation_complete', system_kw: 2, field_visit_done: true },
+  ]);
+  assert.equal(h.active, 3);
+  assert.equal(h.pipelineKw, 10);
+  assert.equal(h.installed, 1);
+  assert.equal(h.awaitingApproval, 1);
+  assert.equal(h.fieldVisits, 1);
+  assert.equal(overdueLoanCount({ data: { loans: [], total: 4 } }), 4);
+  assert.equal(overdueLoanCount(null), null);
+});

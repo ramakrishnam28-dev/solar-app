@@ -3,6 +3,7 @@ import { AppState, type AppStateStatus } from 'react-native';
 import * as LocalAuthentication from 'expo-local-authentication';
 
 import { LOCK_AFTER_MS } from '@/lib/config';
+import { lockPaused } from '@/state/lockPause';
 import { ApiError } from '@/lib/api';
 import { KEYS } from '@/lib/kv';
 import { secureStore } from '@/lib/storage';
@@ -126,7 +127,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       if (next === 'background') { backgroundedAt.current = Date.now(); return; }
       if (next === 'active') {
         const t = backgroundedAt.current; backgroundedAt.current = null;
-        if (t && bioRef.current && statusRef.current === 'signedIn' && Date.now() - t > LOCK_AFTER_MS) set('locked');
+        if (t && !lockPaused() && bioRef.current && statusRef.current === 'signedIn' && Date.now() - t > LOCK_AFTER_MS) set('locked');
       }
     });
     return () => sub.remove();
