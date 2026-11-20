@@ -1,11 +1,16 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
-import { Card, Empty, Pill, Screen, SectionLabel, Title } from '@/components/ui';
+import { Banner, Btn, Card, Divider, Empty, Pill, Screen, SectionLabel, Title } from '@/components/ui';
 import { TAB_BAR_SPACE } from '@/components/tab-bar';
-import { colors, font } from '@/constants/theme';
-import { PAGE_KEYS, PAGE_LABELS, ROLE_LABELS } from '@/lib/permissions';
+import { colors, font, radius, space } from '@/constants/theme';
+import { fetchAllForDashboard } from '@/lib/customers';
+import { computeKpis, computeOps } from '@/lib/dashboard';
+import { count } from '@/lib/format';
+import { ROLE_LABELS } from '@/lib/permissions';
+import { api } from '@/state/api';
 import { useSession } from '@/state/session';
+import { useLoad } from '@/state/useLoad';
 
 function greeting() {
   const h = new Date().getHours();
@@ -15,36 +20,61 @@ function greeting() {
 export default function Home() {
   const { user, can } = useSession();
   const first = (user?.name ?? '').split(' ')[0];
-  const allowed = PAGE_KEYS.filter((p) => can(p) && p !== 'profile');
+  const allowed = can('dashboard');
+  const { data, error, loading, refreshing, refresh, reload } = useLoad(() => fetchAllForDashboard(api), []);
+
+  const kpis = data ? computeKpis(data.list, data.total) : [];
+  const ops = data ? computeOps(data.list) : [];
+  const truncated = !!data && data.total > data.list.length;
 
   return (
-    <Screen bottomInset={TAB_BAR_SPACE}>
+    <Screen bottomInset={TAB_BAR_SPACE} refreshing={refreshing} onRefresh={allowed ? refresh : undefined}>
       <Title sub={user ? `${ROLE_LABELS[user.role] ?? user.role}${user.emp_id ? ' · ' + user.emp_id : ''}` : undefined}>
         {greeting()}, {first || 'there'}
       </Title>
 
-      <Card>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Text style={{ fontSize: font.lead, fontWeight: '600', color: colors.ink }}>Signed in</Text>
-          <Pill tone="done">Connected</Pill>
-        </View>
-        <Text style={{ fontSize: font.body, color: colors.ink2, marginTop: 6 }}>
-          Your account can open {allowed.length} sections. They arrive in the app phase by phase.
-        </Text>
-      </Card>
-
-      <SectionLabel>Your access</SectionLabel>
-      <Card>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-          {allowed.map((p) => (
-            <View key={p} style={{ backgroundColor: colors.brandTint, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 6 }}>
-              <Text style={{ color: colors.brand, fontSize: font.small, fontWeight: '600' }}>{PAGE_LABELS[p]}</Text>
-            </View>
+      {!allowed ? (
+        <Empty icon="lock-closed-outline" title="No dashboard for your role" text="Use the other tabs to open your work." />
+      ) : error && !data ? (
+        <>
+          <Banner>{error}</Banner>
+          <Btn label="Try again" onPress={reload} />
+        </>
+      ) : loading && !data ? (
+        <Text accessibilityLiveRegion="polite" style={{ color: colors.ink3, fontSize: font.body }}>Loading today's numbers…</Text>
+      ) : data ? (
+        <>
+          {error ? <Banner tone="waiting">{error} Showing the last numbers.</Banner> : null}
+          {kpis.map((k) => (
+            <Card key={k.label}>
+              <Text style={{ fontSize: font.small, color: colors.ink2, fontWeight: '600' }}>{k.label}</Text>
+              <Text style={{ fontSize: 34, fontWeight: '700', color: colors.ink, marginTop: 2 }}>{count(k.value)}</Text>
+              <Text style={{ fontSize: font.small, color: k.tone === 'warn' ? colors.tone.waiting.fg : colors.ink3, marginTop: 2 }}>{k.note}</Text>
+            </Card>
           ))}
-        </View>
-      </Card>
 
-      <Empty icon="construct-outline" title="Dashboard comes next" text="Phase 1 adds today's numbers, the customer list and the customer screen." />
+          <SectionLabel>Follow-ups</SectionLabel>
+          <Card style={{ paddingVertical: space[1] }}>
+            {ops.map((o, i) => (
+              <View key={o.id}>
+                {i > 0 ? <Divider /> : null}
+                <View style={{ flexDirection: 'row', alignItems: 'center', minHeight: 48, paddingVertical: 6 }}>
+                  <Text style={{ width: 36, color: colors.ink3, fontSize: font.caption, fontWeight: '600' }}>{o.id}</Text>
+                  <Text style={{ flex: 1, color: colors.ink, fontSize: font.body }}>{o.label}</Text>
+                  <View style={{ minWidth: 36, alignItems: 'flex-end' }}>
+                    {o.count ? <Pill tone="waiting">{count(o.count)}</Pill> : <Text style={{ color: colors.ink3, fontSize: font.body }}>0</Text>}
+                  </View>
+                </View>
+              </View>
+            ))}
+          </Card>
+          {truncated ? (
+            <Text style={{ color: colors.ink3, fontSize: font.caption, marginTop: space[2] }}>
+              Follow-up counts use the first {count(data.list.length)} of {count(data.total)} customers, same as the website.
+            </Text>
+          ) : null}
+        </>
+      ) : null}
     </Screen>
   );
 }

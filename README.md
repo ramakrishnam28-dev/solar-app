@@ -1,6 +1,7 @@
 # RCAL Station (native app)
 
-Expo / React Native app for the SolarEPC Station CRM. Phase 0: sign-in, session, biometric lock, role-based tabs, More screen. Customers, Tasks and the dashboard arrive in Phase 1 onward.
+Expo / React Native app for the SolarEPC Station CRM. Phase 0: sign-in, session, biometric lock, role tabs, More screen.
+Phase 1: dashboard (3 numbers + 13 follow-ups), customer list (search, 4 segments, paging, pull to refresh), customer screen (Overview, Progress, Loan; installers see Progress only). Read-only. Tasks tab and the + button are still placeholders.
 
 ## Run it in VS Code
 

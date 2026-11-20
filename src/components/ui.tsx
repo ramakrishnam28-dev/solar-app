@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View,
+  ActivityIndicator, Pressable, RefreshControl, ScrollView, StyleSheet, Text, TextInput, View,
   type StyleProp, type TextInputProps, type ViewStyle,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,13 +8,15 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { MIN_TAP, colors, font, radius, space, type Tone } from '@/constants/theme';
 
-export function Screen({ children, scroll = true, padded = true, bottomInset = 0 }: {
+export function Screen({ children, scroll = true, padded = true, bottomInset = 0, refreshing, onRefresh }: {
   children: React.ReactNode; scroll?: boolean; padded?: boolean; bottomInset?: number;
+  refreshing?: boolean; onRefresh?: () => void;
 }) {
   const body = scroll ? (
     <ScrollView
       contentContainerStyle={[padded && { padding: space[4] }, { paddingBottom: space[6] + bottomInset }]}
       keyboardShouldPersistTaps="handled"
+      refreshControl={onRefresh ? <RefreshControl refreshing={!!refreshing} onRefresh={onRefresh} tintColor={colors.brand} colors={[colors.brand]} /> : undefined}
       showsVerticalScrollIndicator={false}>
       {children}
     </ScrollView>
