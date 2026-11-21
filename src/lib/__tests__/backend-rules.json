@@ -1,0 +1,155 @@
+{
+ "VALID_TRANSITIONS": {
+  "kyc_pending": [
+   "lead_captured",
+   "onboarded",
+   "cancelled"
+  ],
+  "lead_captured": [
+   "onboarded",
+   "pmsg_pending",
+   "cancelled"
+  ],
+  "onboarded": [
+   "pmsg_pending",
+   "cancelled"
+  ],
+  "pmsg_pending": [
+   "pmsg_registered",
+   "cancelled"
+  ],
+  "pmsg_registered": [
+   "loan_ready",
+   "loan_applied",
+   "amount_disbursed",
+   "disbursed_full",
+   "installation_complete",
+   "cancelled"
+  ],
+  "loan_ready": [
+   "loan_applied",
+   "cancelled"
+  ],
+  "loan_applied": [
+   "loan_sanctioned",
+   "loan_rejected",
+   "cancelled"
+  ],
+  "loan_rejected": [
+   "loan_reapplication",
+   "cancelled"
+  ],
+  "loan_reapplication": [
+   "loan_applied",
+   "cancelled"
+  ],
+  "loan_sanctioned": [
+   "amount_disbursed",
+   "disbursed_full",
+   "disbursed_partial"
+  ],
+  "amount_disbursed": [
+   "disbursed_full",
+   "disbursed_partial",
+   "installation_complete"
+  ],
+  "disbursed_full": [
+   "installation_complete"
+  ],
+  "disbursed_partial": [
+   "disbursed_full",
+   "installation_complete"
+  ],
+  "installation_complete": [
+   "net_meter_applied",
+   "cancelled"
+  ],
+  "net_meter_applied": [
+   "net_meter_approved"
+  ],
+  "net_meter_approved": [
+   "net_meter_installed"
+  ],
+  "net_meter_installed": [
+   "subsidy_awaited",
+   "subsidy_credited"
+  ],
+  "subsidy_awaited": [
+   "subsidy_credited"
+  ],
+  "subsidy_credited": [
+   "project_complete"
+  ],
+  "project_complete": [],
+  "survey_completed": [
+   "quotation_sent",
+   "pmsg_pending",
+   "cancelled"
+  ],
+  "quotation_sent": [
+   "loan_ready",
+   "loan_applied",
+   "cancelled"
+  ],
+  "cancelled": [
+   "lead_captured",
+   "onboarded"
+  ]
+ },
+ "STATUS_RANK": {
+  "kyc_pending": 0,
+  "lead_captured": 1,
+  "survey_completed": 1,
+  "onboarded": 2,
+  "pmsg_pending": 3,
+  "pmsg_registered": 4,
+  "quotation_sent": 4,
+  "loan_ready": 5,
+  "loan_applied": 6,
+  "loan_rejected": 6,
+  "loan_reapplication": 6,
+  "loan_sanctioned": 7,
+  "amount_disbursed": 8,
+  "disbursed_partial": 8,
+  "disbursed_full": 9,
+  "installation_complete": 10,
+  "net_meter_applied": 11,
+  "net_meter_approved": 12,
+  "net_meter_installed": 13,
+  "subsidy_awaited": 14,
+  "subsidy_credited": 15,
+  "project_complete": 16
+ },
+ "LOAN_STEPS": [
+  "lead_captured",
+  "onboarded",
+  "pmsg_pending",
+  "pmsg_registered",
+  "loan_ready",
+  "loan_applied",
+  "loan_sanctioned",
+  "amount_disbursed",
+  "disbursed_full",
+  "installation_complete",
+  "net_meter_applied",
+  "net_meter_approved",
+  "net_meter_installed",
+  "subsidy_awaited",
+  "subsidy_credited",
+  "project_complete"
+ ],
+ "CASH_STEPS": [
+  "lead_captured",
+  "onboarded",
+  "pmsg_pending",
+  "pmsg_registered",
+  "amount_disbursed",
+  "installation_complete",
+  "net_meter_applied",
+  "net_meter_approved",
+  "net_meter_installed",
+  "subsidy_awaited",
+  "subsidy_credited",
+  "project_complete"
+ ]
+}
