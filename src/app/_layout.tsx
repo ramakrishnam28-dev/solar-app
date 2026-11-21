@@ -21,7 +21,7 @@ function Navigator() {
   return (
     <>
       <StatusBar style="dark" />
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#f6f7f6' } }}>
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#f4fbf7' } }}>
         <Stack.Protected guard={status === 'signedOut'}>
           <Stack.Screen name="sign-in" />
         </Stack.Protected>

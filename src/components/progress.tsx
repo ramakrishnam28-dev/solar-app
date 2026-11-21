@@ -19,8 +19,8 @@ import { FormProblem, approvePhoto, nmPhotoReview, runOp } from '@/lib/progress-
 import { api } from '@/state/api';
 
 const TONE: Record<ProgressCard['tone'], { bg: string; border: string }> = {
-  warn: { bg: '#fffbeb', border: '#fde68a' }, ok: { bg: '#ecfdf3', border: '#bfe3cb' }, grey: { bg: '#f6f7f6', border: '#e4e7e5' },
-  red: { bg: '#fef2f2', border: '#fecaca' }, violet: { bg: '#fdf4ff', border: '#e9d5ff' }, dark: { bg: '#ecfdf3', border: colors.brand },
+  warn: { bg: '#fffbeb', border: '#fde68a' }, ok: { bg: '#e3f6ec', border: '#bfe8d3' }, grey: { bg: '#f4fbf7', border: '#e4e7e5' },
+  red: { bg: '#fef2f2', border: '#fecaca' }, violet: { bg: '#fdf4ff', border: '#e9d5ff' }, dark: { bg: '#e3f6ec', border: colors.brand },
 };
 const errText = (e: unknown, f: string) => (e instanceof ApiError || e instanceof Error ? e.message : f);
 const ROLE_NOTE = 'Your role cannot do this step. Ask an admin or manager.';
@@ -267,9 +267,9 @@ export function PhotoGrid({ c, role, canApprove, onChanged }: { c: FullCustomer;
           const ph = map[p.key];
           const up = !!ph?.file_url;
           const st = ph?.approval_status || 'pending';
-          const border = st === 'approved' ? '#bfe3cb' : st === 'rejected' ? '#fecaca' : colors.border;
+          const border = st === 'approved' ? '#bfe8d3' : st === 'rejected' ? '#fecaca' : colors.border;
           return (
-            <View key={p.key} style={{ width: '48%', borderWidth: 1.5, borderColor: border, borderRadius: radius.md, padding: space[2], backgroundColor: st === 'approved' ? '#ecfdf3' : st === 'rejected' ? '#fff5f5' : colors.surface }}>
+            <View key={p.key} style={{ width: '48%', borderWidth: 1.5, borderColor: border, borderRadius: radius.md, padding: space[2], backgroundColor: st === 'approved' ? '#e3f6ec' : st === 'rejected' ? '#fff5f5' : colors.surface }}>
               <Text numberOfLines={2} style={{ fontSize: font.caption, fontWeight: '600', color: colors.ink2, marginBottom: 4 }}>{p.label}</Text>
               {up ? <Image source={{ uri: ph!.file_url! }} style={{ width: '100%', aspectRatio: 4 / 3, borderRadius: 6, backgroundColor: colors.tileGrey }} contentFit="cover" accessibilityLabel={`${p.label} photo`} /> : null}
               {busy === p.key ? <ActivityIndicator color={colors.brand} style={{ marginTop: 6 }} /> : up ? (

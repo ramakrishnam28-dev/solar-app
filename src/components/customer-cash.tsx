@@ -10,8 +10,8 @@ import { dateShort } from '@/lib/format';
 
 type Filter = 'all' | 'received' | 'projected';
 const TYPE: Record<FlowRow['type'], { fg: string; bg: string; label: string }> = {
-  actual: { fg: '#166534', bg: '#ecfdf3', label: 'ACTUAL' }, paper: { fg: '#6b726e', bg: '#f1f3f2', label: 'PAPER' },
-  float: { fg: '#92400e', bg: '#fffbeb', label: 'FLOAT' }, 'round-trip': { fg: '#166534', bg: '#ecfdf3', label: 'ROUND-TRIP' },
+  actual: { fg: '#0f5c3f', bg: '#e3f6ec', label: 'ACTUAL' }, paper: { fg: '#6b726e', bg: '#f1f3f2', label: 'PAPER' },
+  float: { fg: '#92400e', bg: '#fffbeb', label: 'FLOAT' }, 'round-trip': { fg: '#0f5c3f', bg: '#e3f6ec', label: 'ROUND-TRIP' },
   'customer-owned': { fg: '#3d4440', bg: '#f1f3f2', label: 'CUSTOMER-OWNED' }, shadow: { fg: '#b91c1c', bg: '#fef2f2', label: 'SHADOW' },
 };
 
